@@ -1,0 +1,101 @@
+1. Buat Stored Procedure untuk melihat Absensi Guru dengan memasukan nama Guru
+
+DELIMITER //
+
+CREATE PROCEDURE AbsensiGurudariNama(NamaGuru VARCHAR (50))
+BEGIN
+    SELECT 
+      	AG.Absen,
+        AG.Keterangan,
+        AG.Tanggal
+    FROM 
+    	Absensi_Guru AS AG
+    JOIN 
+    	Guru ON Guru.Guru_ID = AG.Guru_ID
+    WHERE Guru.Nama = NamaGuru;
+END //
+
+DELIMITER ;
+
+
+
+2. Buat Stored Procedure untuk melihat Absensi Siswa dengan memasukan nama Siswa 
+
+DELIMITER //
+
+CREATE PROCEDURE AbsensiSiswadariNama(IN NamaSiswa VARCHAR(50))
+BEGIN
+    SELECT 
+        AG.Absen,
+        AG.Keterangan,
+        AG.Tanggal
+    FROM 
+        Siswa  
+    JOIN 
+        Absensi_Siswa AS AG ON AG.Siswa_ID = Siswa.Siswa_ID
+    WHERE Siswa.Nama = NamaSiswa;
+END //
+
+DELIMITER ;
+
+
+3. Buat Stored Procedure untuk melihat Jadwal yang dimiliki Guru dengan mamasukan nama Guru
+
+DELIMITER //
+
+CREATE PROCEDURE JadwalMengajarGurudariNama(IN NamaGuru VARCHAR(50))
+BEGIN
+    SELECT 
+        JMP.Nama_Kelas,
+        MP.Nama_Pelajaran,
+        JMP.Hari,
+        CONCAT(JMP.Jam_Mulai, ' - ', JMP.Jam_Selesai) AS Waktu
+    FROM 
+        guru  
+    JOIN 
+        jadwal_mata_pelajaran AS JMP ON guru.Guru_ID = JMP.Guru_ID
+    JOIN
+        Mata_Pelajaran AS MP ON MP.Mata_Pelajaran_ID = JMP.Mata_Pelajaran_ID
+    WHERE 
+        guru.Nama = NamaGuru;
+END  //
+
+DELIMITER ;
+
+
+4. Buat Stored Procedure untuk melihat Jadwal yang dimiliki Kelas dengan mamasukan nama Kelas
+
+DELIMITER //
+
+CREATE PROCEDURE JadwalKelasdarinamakelas(IN Cari_Kelas VARCHAR(50))
+BEGIN
+    SELECT 
+        JMP.Jadwal_ID,
+        JMP.Mata_Pelajaran_ID,
+        JMP.Nama_Kelas,
+        JMP.Hari,
+        CONCAT(JMP.Jam_Mulai, ' - ', JMP.Jam_Selesai) AS Waktu,
+        Guru.Nama As Nama_Pengajar
+    FROM Jadwal_Mata_Pelajaran AS JMP
+    JOIN Guru On Guru.Guru_ID = JMP.Guru_ID
+    WHERE Nama_Kelas = Cari_Kelas;
+END //
+
+DELIMITER ;
+
+
+5. Buat Stored Procedure untu melihat data murid berdasarkan kelas 
+
+DELIMITER //
+
+CREATE PROCEDURE DataSiswaDariNamaKelas(IN Cari_Nama VARCHAR(50))
+BEGIN
+    SELECT 
+        Siswa_Id,
+        Nama,
+        Jenis_kelamin
+    FROM Siswa
+    WHERE Kelas = Cari_Nama;
+END //
+
+DELIMITER ;

@@ -1,0 +1,32 @@
+1. Buat View untuk melihat kelas dan nama wali kelasnya
+
+CREATE VIEW kelasdanwalikelas AS
+SELECT 
+	Kelas.Nama_Kelas,
+    	Guru.Nama AS Wali_Kelas
+FROM 
+	Kelas 
+JOIN 
+	Guru ON Guru.Guru_ID = Kelas.Wali_Kelas_ID
+
+
+2. Buat View untuk melihat Data murid yang ada di Jurusan IPA
+
+CREATE VIEW SiswAJUrusanIPA AS
+SELECT
+    Siswa_ID,
+    Nama,
+    Kelas
+FROM Siswa
+WHERE Kelas LIKE 'X IPA%' OR Kelas LIKE 'XI IPA%' OR Kelas LIKE 'XII IPA%';
+
+
+3. Buat View untuk melihat Data murid yang ada di Jurusan IPS
+
+CREATE VIEW SiswaJurusanIPS AS
+SELECT
+    Siswa_ID,
+    Nama,
+    Kelas
+FROM Siswa
+WHERE Kelas LIKE 'X IPS%' OR Kelas LIKE 'XI IPS%' OR Kelas LIKE 'XII IPS%';

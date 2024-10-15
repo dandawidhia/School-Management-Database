@@ -1,0 +1,103 @@
+Database
+CREATE DATABASE Database_Manajemen_Sekolah;
+
+
+Tabel
+1. Buat Tabel Guru
+
+CREATE TABLE Guru (
+  Guru_ID VARCHAR(10) CHECK(Guru_ID REGEXP "GR[0-9][0-9][0-9]") NOT NULL, 
+  Nama VARCHAR(50) NOT NULL,
+  Alamat VARCHAR(50) NOT NULL,
+  Jenis_Kelamin CHAR(1) CHECK(Jenis_Kelamin IN ('P', 'L')) NOT NULL,
+  Email VARCHAR(50),
+  Nomor_Telepon VARCHAR(15) NOT NULL,
+  PRIMARY KEY (Guru_ID)
+); 
+
+
+2. Buat Tabel Kelas
+
+ CREATE TABLE Kelas (
+  Nama_Kelas VARCHAR(10) CHECK (Nama_Kelas IN ('X IPA 1', 'X IPA 2', 'X IPA 3', 'X IPS 1', 'X IPS 2', 'XI IPA 1', 'XI IPA 2', 'XI IPA 3', 'XI IPS 1', 'XI IPS 2', 'XII IPA 1', 'XII IPA 2', 'XII IPA 3', 'XII IPS 1', 'XII IPS 2')) NOT NULL,
+  Wali_Kelas_ID VARCHAR(10) NOT NULL,
+  Jumlah_Siswa INT NOT NULL,
+  PRIMARY KEY (Nama_Kelas),
+  FOREIGN KEY (Wali_Kelas_ID) REFERENCES Guru(Guru_ID) ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+
+3. Buat Tabel Siswa
+
+CREATE TABLE Siswa (
+  Siswa_ID VARCHAR(10) CHECK (Siswa_ID REGEXP "SS[0-9][0-9][0-9][0-9][0-9]") NOT NULL,
+  Nama Varchar(50) NOT NULL,
+  Alamat VARCHAR(50) NOT NULL,
+  Jenis_Kelamin CHAR(1) CHECK(Jenis_Kelamin IN ('P', 'L')) NOT NULL,
+  Nomor_Telepon VARCHAR(15) NOT NULL,
+  Kelas VARCHAR(10) NOT NULL,
+  PRIMARY KEY (Siswa_ID),
+  FOREIGN KEY (Kelas) REFERENCES Kelas(Nama_Kelas) ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+
+
+4. Buat Tabel Mata Pelajaran
+
+CREATE TABLE Mata_Pelajaran (
+  Mata_Pelajaran_ID VARCHAR(10) CHECK (Mata_Pelajaran_ID  REGEXP 'MT[0-9][0-9][0-9]') NOT NULL,
+  Nama_Pelajaran VARCHAR(50) NOT NULL,
+  Guru_ID VARCHAR(10) ,
+  PRIMARY KEY (Mata_Pelajaran_ID),
+  FOREIGN KEY (Guru_ID) REFERENCES Guru(Guru_ID)ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+
+
+5. Buat tabel Jadwal Mata Pelajaran
+
+CREATE UNIQUE INDEX GuruPelajaran
+ON mata_pelajaran(Guru_ID, Mata_Pelajaran_ID);
+
+CREATE TABLE Jadwal_Mata_Pelajaran (
+  Jadwal_ID VARCHAR(10) CHECK (Jadwal_ID REGEXP 'J[0-9][0-9][0-9]') NOT NULL,
+  Mata_Pelajaran_ID VARCHAR(10) NOT NULL,
+  Nama_Kelas VARCHAR(10) NOT NULL,
+  Hari VARCHAR(10) NOT NULL,
+  Jam_Mulai TIME CHECK (Jam_Mulai IN ('07:15:00', '08:00:00', '08:45:00', '10:15:00', '11:00:00', '11:45:00','12:30:00', '13:15:00', '14:00:00')) NOT NULL,
+  Jam_Selesai TIME NOT NULL,
+  Guru_ID VARCHAR(50) NOT NULL,
+  CHECK (Jam_Selesai = ADDTIME(Jam_Mulai, '00:45:00')),
+  PRIMARY KEY (Jadwal_ID),
+  FOREIGN KEY (Mata_Pelajaran_ID) REFERENCES mata_pelajaran(Mata_Pelajaran_ID) ON UPDATE CASCADE ON DELETE CASCADE,
+  FOREIGN KEY (Guru_ID, Mata_Pelajaran_ID) REFERENCES mata_pelajaran(Guru_ID, Mata_Pelajaran_ID) ON UPDATE CASCADE ON DELETE CASCADE,
+  FOREIGN KEY (Nama_Kelas) REFERENCES Kelas(Nama_Kelas) ON UPDATE CASCADE ON DELETE CASCADE,
+  CONSTRAINT guruunik UNIQUE (Hari, Jam_Mulai, Jam_Selesai, Guru_ID),
+  CONSTRAINT matapelajaranunik UNIQUE (Hari, Jam_Mulai, Jam_Selesai, Nama_Kelas)
+);
+
+
+6. Buat Table Absensi Guru
+
+CREATE TABLE Absensi_Guru (
+  Absen_ID INT AUTO_INCREMENT,
+  Guru_ID VARCHAR(10) NOT NULL,
+  Absen CHAR(1) CHECK (Absen IN ('A','I','S')) NOT NULL,
+  Keterangan VARCHAR(50) NOT NULL,
+  Tanggal VARCHAR(10) NOT NULL,
+  PRIMARY KEY (Absen_ID), 
+  FOREIGN KEY (Guru_ID) REFERENCES guru(Guru_ID) ON UPDATE CASCADE ON DELETE CASCADE
+); 
+
+
+7. Buat Table Absensi_Siswa
+
+CREATE TABLE Absensi_Siswa (
+  Absen_ID INT AUTO_INCREMENT,
+  Siswa_ID VARCHAR(10) NOT NULL,
+  Absen CHAR(1) CHECK (Absen IN ('A','I','S')) NOT NULL,
+  Keterangan VARCHAR(50) NOT NULL,
+  Tanggal VARCHAR(10) NOT NULL,
+  PRIMARY KEY (Absen_ID), 
+  FOREIGN KEY (siswa_ID) REFERENCES Siswa(Siswa_ID) ON UPDATE CASCADE ON DELETE CASCADE
+);

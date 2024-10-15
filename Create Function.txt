@@ -1,0 +1,57 @@
+1. Hitung jumlah murid dari nama kelas
+
+DELIMITER //
+
+CREATE FUNCTION Hitungmuriddikelas(Nama_Kelas VARCHAR(50))
+RETURNS INT
+DETERMINISTIC
+BEGIN
+    DECLARE Hitung INT;
+    SELECT COUNT(*) INTO Hitung
+    FROM siswa
+    WHERE Kelas = Nama_Kelas;
+RETURN Hitung;
+
+END  //
+
+DELIMITER ;
+
+
+2. Hitung Jumlah Absen siswa dari nama siswa
+
+DELIMITER //
+
+CREATE FUNCTION JumlahAbsenMuriddariNama(Nama_Murid VARCHAR(50))
+RETURNS INT
+READS SQL DATA
+BEGIN
+    DECLARE Absen INT;
+    SELECT COUNT(*) INTO Absen
+    FROM Absensi_Siswa
+    JOIN Siswa ON Siswa.Siswa_ID = Absensi_Siswa.Siswa_ID
+    WHERE Siswa.Nama = Nama_Murid;
+
+    RETURN Absen;
+END //
+
+DELIMITER ;
+
+
+3. Hitung jumlah absensi guru dari nama guru
+
+DELIMITER //
+
+CREATE FUNCTION JumlahAbsenGurudariNama(Nama_Guru VARCHAR(50))
+RETURNS INT
+READS SQL DATA
+BEGIN
+    DECLARE absen INT;
+    SELECT COUNT(*) INTO absen
+    FROM Absensi_Guru
+    JOIN Guru ON Guru.Guru_ID = Absensi_Guru.Guru_ID
+    WHERE Guru.Nama = Nama_Guru;
+
+    RETURN absen;
+END //
+
+DELIMITER ; 
